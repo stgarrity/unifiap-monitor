@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		A1000001000000000000001 /* UniFiAPMonitorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000000000000001 /* UniFiAPMonitorApp.swift */; };
 		A1000003000000000000001 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000001 /* MenuBarView.swift */; };
+		A100000B000000000000001 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000C000000000000001 /* LocationManager.swift */; };
+		A100000D000000000000001 /* WiFiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000E000000000000001 /* WiFiManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +19,8 @@
 		A1000004000000000000001 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		A1000005000000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1000006000000000000001 /* UniFiAPMonitor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UniFiAPMonitor.entitlements; sourceTree = "<group>"; };
+		A100000C000000000000001 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		A100000E000000000000001 /* WiFiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,8 @@
 		A100000A000000000000001 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A100000C000000000000001 /* LocationManager.swift */,
+				A100000E000000000000001 /* WiFiManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -151,6 +157,8 @@
 			files = (
 				A1000001000000000000001 /* UniFiAPMonitorApp.swift in Sources */,
 				A1000003000000000000001 /* MenuBarView.swift in Sources */,
+				A100000B000000000000001 /* LocationManager.swift in Sources */,
+				A100000D000000000000001 /* WiFiManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
