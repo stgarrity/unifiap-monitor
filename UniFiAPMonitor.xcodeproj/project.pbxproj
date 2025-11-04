@@ -11,6 +11,8 @@
 		A1000003000000000000001 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000001 /* MenuBarView.swift */; };
 		A100000B000000000000001 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000C000000000000001 /* LocationManager.swift */; };
 		A100000D000000000000001 /* WiFiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000E000000000000001 /* WiFiManager.swift */; };
+		A100000F000000000000001 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010000000000000001 /* KeychainManager.swift */; };
+		A1000011000000000000001 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012000000000000001 /* PreferencesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		A1000006000000000000001 /* UniFiAPMonitor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UniFiAPMonitor.entitlements; sourceTree = "<group>"; };
 		A100000C000000000000001 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		A100000E000000000000001 /* WiFiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiManager.swift; sourceTree = "<group>"; };
+		A1000010000000000000001 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		A1000012000000000000001 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				A1000004000000000000001 /* MenuBarView.swift */,
+				A1000012000000000000001 /* PreferencesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -83,6 +88,7 @@
 			children = (
 				A100000C000000000000001 /* LocationManager.swift */,
 				A100000E000000000000001 /* WiFiManager.swift */,
+				A1000010000000000000001 /* KeychainManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -159,6 +165,8 @@
 				A1000003000000000000001 /* MenuBarView.swift in Sources */,
 				A100000B000000000000001 /* LocationManager.swift in Sources */,
 				A100000D000000000000001 /* WiFiManager.swift in Sources */,
+				A100000F000000000000001 /* KeychainManager.swift in Sources */,
+				A1000011000000000000001 /* PreferencesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

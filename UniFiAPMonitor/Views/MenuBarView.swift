@@ -4,6 +4,8 @@ import CoreLocation
 struct MenuBarView: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var wifiManager: WiFiManager
+    @Binding var showingPreferences: Bool
+    @Environment(\.openWindow) private var openWindow
     
     var body: some View {
         Text("UniFi AP Monitor")
@@ -49,6 +51,12 @@ struct MenuBarView: View {
             wifiManager.getCurrentWiFiInfo()
         }
         .disabled(locationManager.authorizationStatus != .authorizedAlways)
+        
+        Divider()
+        
+        Button("Preferences...") {
+            openWindow(id: "preferences")
+        }
         
         Divider()
         
