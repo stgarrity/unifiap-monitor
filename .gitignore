@@ -1,1 +1,10 @@
 .env
+*.p12
+*.cer
+certificate.p12
+build/
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.dmg
+*.zip

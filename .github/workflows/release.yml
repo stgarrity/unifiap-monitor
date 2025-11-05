@@ -1,0 +1,129 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+    
+    - name: Import Code Signing Certificate
+      if: ${{ secrets.CERTIFICATE_P12 != '' }}
+      env:
+        CERTIFICATE_P12: ${{ secrets.CERTIFICATE_P12 }}
+        CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+      run: |
+        echo "$CERTIFICATE_P12" | base64 --decode > certificate.p12
+        security create-keychain -p "" build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p "" build.keychain
+        security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+        rm certificate.p12
+    
+    - name: Build app
+      run: |
+        xcodebuild -project UniFiAPMonitor.xcodeproj \
+          -scheme UniFiAPMonitor \
+          -configuration Release \
+          -derivedDataPath build \
+          clean build \
+          CODE_SIGN_IDENTITY="${{ secrets.CODE_SIGN_IDENTITY }}" \
+          CODE_SIGN_STYLE=Manual \
+          DEVELOPMENT_TEAM="${{ secrets.DEVELOPMENT_TEAM }}" \
+          || xcodebuild -project UniFiAPMonitor.xcodeproj \
+             -scheme UniFiAPMonitor \
+             -configuration Release \
+             -derivedDataPath build \
+             clean build \
+             CODE_SIGN_IDENTITY="-" \
+             CODE_SIGN_STYLE=Manual
+    
+    - name: Find app bundle
+      id: find_app
+      run: |
+        APP_PATH=$(find build -name "*.app" -type d | head -n 1)
+        echo "app_path=$APP_PATH" >> $GITHUB_OUTPUT
+        echo "Found app at: $APP_PATH"
+    
+    - name: Notarize app
+      if: ${{ secrets.NOTARIZATION_APPLE_ID != '' && secrets.NOTARIZATION_PASSWORD != '' && secrets.NOTARIZATION_TEAM_ID != '' }}
+      env:
+        APPLE_ID: ${{ secrets.NOTARIZATION_APPLE_ID }}
+        APPLE_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+        TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+      run: |
+        APP_PATH="${{ steps.find_app.outputs.app_path }}"
+        ditto -c -k --keepParent "$APP_PATH" "UniFiAPMonitor.zip"
+        xcrun notarytool submit "UniFiAPMonitor.zip" \
+          --apple-id "$APPLE_ID" \
+          --password "$APPLE_PASSWORD" \
+          --team-id "$TEAM_ID" \
+          --wait
+        xcrun stapler staple "$APP_PATH"
+        rm "UniFiAPMonitor.zip"
+    
+    - name: Create DMG
+      run: |
+        APP_PATH="${{ steps.find_app.outputs.app_path }}"
+        APP_NAME=$(basename "$APP_PATH")
+        
+        # Create a temporary directory for DMG contents
+        mkdir -p dmg_content
+        cp -R "$APP_PATH" dmg_content/
+        ln -s /Applications dmg_content/Applications
+        
+        # Create DMG
+        hdiutil create -volname "UniFi AP Monitor" \
+          -srcfolder dmg_content \
+          -ov -format UDZO \
+          UniFiAPMonitor.dmg
+        
+        rm -rf dmg_content
+    
+    - name: Create ZIP archive
+      run: |
+        APP_PATH="${{ steps.find_app.outputs.app_path }}"
+        ditto -c -k --keepParent "$APP_PATH" UniFiAPMonitor.zip
+    
+    - name: Get version
+      id: version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/}
+        else
+          VERSION=$(git describe --tags --always)
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          UniFiAPMonitor.dmg
+          UniFiAPMonitor.zip
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload artifacts
+      if: "!startsWith(github.ref, 'refs/tags/')"
+      uses: actions/upload-artifact@v4
+      with:
+        name: UniFiAPMonitor-${{ steps.version.outputs.version }}
+        path: |
+          UniFiAPMonitor.dmg
+          UniFiAPMonitor.zip
