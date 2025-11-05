@@ -15,6 +15,7 @@
 		A1000011000000000000001 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012000000000000001 /* PreferencesView.swift */; };
 A1C54D96D8A4A54874B9E80 /* UniFiAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C1680128AB204DEFBD587 /* UniFiAPIClient.swift */; };
 A1D61800592F314D63A7C47 /* AccessPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */; };
+		A1708D7EED25454007844D6 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CF4E61757D524FBD8F82E /* AppState.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@ A1D61800592F314D63A7C47 /* AccessPoint.swift in Sources */ = {isa = PBXBuildFile
 		A1000012000000000000001 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 A1C1680128AB204DEFBD587 /* UniFiAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniFiAPIClient.swift; sourceTree = "<group>"; };
 A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessPoint.swift; sourceTree = "<group>"; };
+		A1CF4E61757D524FBD8F82E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +95,8 @@ sourceTree = "<group>";
 			isa = PBXGroup;
 			children = (
 						A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */,
-			);
+			A1CF4E61757D524FBD8F82E /* AppState.swift */,
+);
 			path = Models;
 			sourceTree = "<group>";
 		};
@@ -184,6 +187,7 @@ sourceTree = "<group>";
 				A1000011000000000000001 /* PreferencesView.swift in Sources */,
 			A1C54D96D8A4A54874B9E80 /* UniFiAPIClient.swift in Sources */,
 A1D61800592F314D63A7C47 /* AccessPoint.swift in Sources */,
+A1708D7EED25454007844D6 /* AppState.swift in Sources */,
 );
 			runOnlyForDeploymentPostprocessing = 0;
 		};

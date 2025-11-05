@@ -4,17 +4,22 @@ import SwiftUI
 struct UniFiAPMonitorApp: App {
     @StateObject private var locationManager = LocationManager()
     @StateObject private var wifiManager = WiFiManager()
+    @StateObject private var appState = AppState()
     @State private var showingPreferences = false
     
-    init() {
-        print("UniFiAPMonitor app starting...")
-    }
-    
     var body: some Scene {
-        MenuBarExtra("UniFi AP Monitor", systemImage: "wifi.circle.fill") {
+        MenuBarExtra {
             MenuBarView(showingPreferences: $showingPreferences)
                 .environmentObject(locationManager)
                 .environmentObject(wifiManager)
+                .environmentObject(appState)
+                .onAppear {
+                    // Pass managers to AppState
+                    appState.locationManager = locationManager
+                    appState.wifiManager = wifiManager
+                }
+        } label: {
+            Image(systemName: appState.connectionState.icon)
         }
         .menuBarExtraStyle(.menu)
         

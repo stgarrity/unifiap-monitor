@@ -141,9 +141,23 @@ class UniFiAPIClient: NSObject {
     
     func findAccessPoint(byBSSID bssid: String, accessPoints: [AccessPoint]) -> AccessPoint? {
         let normalizedBSSID = bssid.replacingOccurrences(of: ":", with: "").lowercased()
-        return accessPoints.first { ap in
-            ap.normalizedMAC == normalizedBSSID
+        
+        // First try exact match
+        if let exactMatch = accessPoints.first(where: { $0.normalizedMAC == normalizedBSSID }) {
+            return exactMatch
         }
+        
+        // UniFi APs broadcast multiple BSSIDs (one per SSID), where only the last octet differs
+        // Try matching on first 5 octets (first 10 hex characters)
+        if normalizedBSSID.count >= 10 {
+            let bssidPrefix = String(normalizedBSSID.prefix(10))
+            return accessPoints.first { ap in
+                let apPrefix = String(ap.normalizedMAC.prefix(10))
+                return apPrefix == bssidPrefix
+            }
+        }
+        
+        return nil
     }
     
     // MARK: - Private Methods
