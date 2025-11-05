@@ -25,6 +25,7 @@ struct UniFiAPMonitorApp: App {
         
         Window("Preferences", id: "preferences") {
             PreferencesView()
+                .environmentObject(appState)
         }
         .windowResizability(.contentSize)
         .defaultPosition(.center)

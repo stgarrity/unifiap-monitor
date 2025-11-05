@@ -3,6 +3,7 @@ import SwiftUI
 struct PreferencesView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
+    @EnvironmentObject var appState: AppState
     @State private var controllerURL: String = ""
     @State private var username: String = ""
     @State private var password: String = ""
@@ -10,6 +11,7 @@ struct PreferencesView: View {
     @State private var alertMessage = ""
     @State private var alertTitle = ""
     @State private var isTesting = false
+    @State private var isUpdatingCache = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -32,6 +34,45 @@ struct PreferencesView: View {
                     
                     SecureField("Password", text: $password)
                         .textFieldStyle(.roundedBorder)
+                }
+                
+                Section {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Access Point Cache")
+                            .font(.headline)
+                        
+                        let cacheInfo = appState.getCacheInfo()
+                        if cacheInfo.count > 0 {
+                            Text("\(cacheInfo.count) access points cached")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            if let lastUpdated = cacheInfo.lastUpdated {
+                                Text("Last updated: \(lastUpdated.formatted(date: .abbreviated, time: .shortened))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        } else {
+                            Text("No access points cached")
+                                .font(.caption)
+                                .foregroundColor(.orange)
+                        }
+                        
+                        Button {
+                            updateAPCache()
+                        } label: {
+                            HStack {
+                                if isUpdatingCache {
+                                    ProgressView()
+                                        .controlSize(.small)
+                                        .padding(.trailing, 4)
+                                }
+                                Text(isUpdatingCache ? "Updating..." : "Update AP Cache")
+                            }
+                        }
+                        .disabled(isUpdatingCache || controllerURL.isEmpty || username.isEmpty || password.isEmpty)
+                    }
+                    .padding(.vertical, 8)
                 }
             }
             .formStyle(.grouped)
@@ -59,7 +100,7 @@ struct PreferencesView: View {
             }
             .padding(.bottom)
         }
-        .frame(width: 450, height: 350)
+        .frame(width: 500, height: 480)
         .onAppear {
             loadCredentials()
         }
@@ -162,6 +203,31 @@ struct PreferencesView: View {
                 await MainActor.run {
                     isTesting = false
                     alertTitle = "Connection Failed"
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                }
+            }
+        }
+    }
+    
+    private func updateAPCache() {
+        isUpdatingCache = true
+        
+        Task {
+            do {
+                try await appState.updateAPCache()
+                
+                await MainActor.run {
+                    isUpdatingCache = false
+                    let cacheInfo = appState.getCacheInfo()
+                    alertTitle = "Cache Updated"
+                    alertMessage = "Successfully cached \(cacheInfo.count) access point(s)"
+                    showAlert = true
+                }
+            } catch {
+                await MainActor.run {
+                    isUpdatingCache = false
+                    alertTitle = "Update Failed"
                     alertMessage = error.localizedDescription
                     showAlert = true
                 }

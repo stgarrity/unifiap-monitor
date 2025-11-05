@@ -57,6 +57,11 @@ class AppState: ObservableObject {
     }
     
     init() {
+        // Load cached APs on startup
+        if let cached = APCacheManager.shared.loadAccessPoints() {
+            accessPoints = cached
+        }
+        
         Task { @MainActor in
             startPeriodicRefresh()
         }
@@ -115,26 +120,19 @@ class AppState: ObservableObject {
                 return
             }
             
-            // Try to use cached AP list first, or fetch new one
+            // Check if we have cached AP list
             if accessPoints.isEmpty {
-                try await fetchAccessPoints(url: url, username: username, password: password)
+                connectionState = .error
+                errorMessage = "No AP cache. Please update AP cache in Preferences."
+                isRefreshing = false
+                return
             }
             
             // Match current BSSID to AP list
-            print("DEBUG: Attempting to match BSSID: \(bssid)")
-            print("DEBUG: Normalized BSSID: \(bssid.replacingOccurrences(of: ":", with: "").lowercased())")
-            print("DEBUG: Number of APs in list: \(accessPoints.count)")
-            
             if let matchedAP = UniFiAPIClient.shared.findAccessPoint(byBSSID: bssid, accessPoints: accessPoints) {
-                print("DEBUG: ✅ Matched AP: \(matchedAP.displayName)")
                 currentAccessPoint = matchedAP
                 connectionState = .connected
             } else {
-                print("DEBUG: ❌ No match found")
-                print("DEBUG: Available normalized MACs:")
-                for ap in accessPoints {
-                    print("  - \(ap.displayName): \(ap.normalizedMAC)")
-                }
                 // Connected to WiFi but not a home AP
                 currentAccessPoint = nil
                 connectionState = .away
@@ -151,9 +149,30 @@ class AppState: ObservableObject {
     }
     
     func forceRefresh() async {
-        // Clear cache and refresh
-        accessPoints = []
+        // Just refresh status, don't fetch APs
         await refresh()
+    }
+    
+    func updateAPCache() async throws {
+        // Fetch access points from UniFi and update cache
+        let credentials = KeychainManager.shared.retrieveUniFiCredentials()
+        guard let url = credentials.url,
+              let username = credentials.username,
+              let password = credentials.password else {
+            throw NSError(domain: "AppState", code: 1, userInfo: [NSLocalizedDescriptionKey: "No UniFi credentials configured"])
+        }
+        
+        try await fetchAccessPoints(url: url, username: username, password: password)
+        
+        // Save to cache
+        APCacheManager.shared.saveAccessPoints(accessPoints)
+        
+        // Immediately refresh to show current AP
+        await refresh()
+    }
+    
+    func getCacheInfo() -> (count: Int, lastUpdated: Date?) {
+        return (accessPoints.count, APCacheManager.shared.getCacheTimestamp())
     }
     
     // MARK: - Private Methods
