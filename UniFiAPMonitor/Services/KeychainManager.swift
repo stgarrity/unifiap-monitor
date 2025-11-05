@@ -6,11 +6,24 @@ class KeychainManager {
     
     private let service = "com.stgarrity.UniFiAPMonitor"
     
-    enum KeychainError: Error {
+    enum KeychainError: Error, LocalizedError {
         case itemNotFound
         case duplicateItem
         case invalidItemFormat
         case unexpectedStatus(OSStatus)
+        
+        var errorDescription: String? {
+            switch self {
+            case .itemNotFound:
+                return "Keychain item not found"
+            case .duplicateItem:
+                return "Keychain item already exists"
+            case .invalidItemFormat:
+                return "Invalid data format"
+            case .unexpectedStatus(let status):
+                return "Keychain error: \(status) - \(SecCopyErrorMessageString(status, nil) as String? ?? "Unknown error")"
+            }
+        }
     }
     
     // MARK: - Save
@@ -24,7 +37,8 @@ class KeychainManager {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: account,
-            kSecValueData as String: passwordData
+            kSecValueData as String: passwordData,
+            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
         ]
         
         // Try to delete existing item first

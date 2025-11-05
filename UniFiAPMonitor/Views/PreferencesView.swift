@@ -2,12 +2,14 @@ import SwiftUI
 
 struct PreferencesView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.scenePhase) var scenePhase
     @State private var controllerURL: String = ""
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var alertTitle = ""
+    @State private var isTesting = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -45,6 +47,11 @@ struct PreferencesView: View {
                 }
                 .foregroundColor(.red)
                 
+                Button("Test Connection") {
+                    testConnection()
+                }
+                .disabled(isTesting || controllerURL.isEmpty || username.isEmpty || password.isEmpty)
+                
                 Button("Save") {
                     saveCredentials()
                 }
@@ -55,6 +62,11 @@ struct PreferencesView: View {
         .frame(width: 450, height: 350)
         .onAppear {
             loadCredentials()
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                loadCredentials()
+            }
         }
         .alert(alertTitle, isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
@@ -121,6 +133,39 @@ struct PreferencesView: View {
             alertTitle = "Error"
             alertMessage = "Failed to clear credentials: \(error.localizedDescription)"
             showAlert = true
+        }
+    }
+    
+    private func testConnection() {
+        guard !controllerURL.isEmpty, !username.isEmpty, !password.isEmpty else {
+            return
+        }
+        
+        isTesting = true
+        
+        Task {
+            do {
+                let accessPoints = try await UniFiAPIClient.shared.testConnection(
+                    url: controllerURL,
+                    username: username,
+                    password: password
+                )
+                
+                await MainActor.run {
+                    isTesting = false
+                    alertTitle = "Success"
+                    alertMessage = "Connected successfully!\n\nFound \(accessPoints.count) access point(s):\n" +
+                        accessPoints.map { "• \($0.displayName) (\($0.mac))" }.joined(separator: "\n")
+                    showAlert = true
+                }
+            } catch {
+                await MainActor.run {
+                    isTesting = false
+                    alertTitle = "Connection Failed"
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                }
+            }
         }
     }
 }

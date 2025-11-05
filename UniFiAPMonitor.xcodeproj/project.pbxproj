@@ -13,7 +13,9 @@
 		A100000D000000000000001 /* WiFiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000E000000000000001 /* WiFiManager.swift */; };
 		A100000F000000000000001 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010000000000000001 /* KeychainManager.swift */; };
 		A1000011000000000000001 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012000000000000001 /* PreferencesView.swift */; };
-/* End PBXBuildFile section */
+A1C54D96D8A4A54874B9E80 /* UniFiAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C1680128AB204DEFBD587 /* UniFiAPIClient.swift */; };
+A1D61800592F314D63A7C47 /* AccessPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */; };
+		/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A1000000000000000000001 /* UniFiAPMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UniFiAPMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -25,7 +27,9 @@
 		A100000E000000000000001 /* WiFiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiManager.swift; sourceTree = "<group>"; };
 		A1000010000000000000001 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		A1000012000000000000001 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+A1C1680128AB204DEFBD587 /* UniFiAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniFiAPIClient.swift; sourceTree = "<group>"; };
+A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessPoint.swift; sourceTree = "<group>"; };
+		/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A1FFFFFF000000000000001 /* Frameworks */ = {
@@ -76,9 +80,19 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+A174C262386B9D476AAA99A /* Models */ = {
+isa = PBXGroup;
+children = (
+A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */,
+);
+path = Models;
+sourceTree = "<group>";
+};
+
 		A1000009000000000000001 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+						A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -89,7 +103,8 @@
 				A100000C000000000000001 /* LocationManager.swift */,
 				A100000E000000000000001 /* WiFiManager.swift */,
 				A1000010000000000000001 /* KeychainManager.swift */,
-			);
+			A1C1680128AB204DEFBD587 /* UniFiAPIClient.swift */,
+);
 			path = Services;
 			sourceTree = "<group>";
 		};
@@ -167,7 +182,9 @@
 				A100000D000000000000001 /* WiFiManager.swift in Sources */,
 				A100000F000000000000001 /* KeychainManager.swift in Sources */,
 				A1000011000000000000001 /* PreferencesView.swift in Sources */,
-			);
+			A1C54D96D8A4A54874B9E80 /* UniFiAPIClient.swift in Sources */,
+A1D61800592F314D63A7C47 /* AccessPoint.swift in Sources */,
+);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
