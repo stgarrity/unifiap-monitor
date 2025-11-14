@@ -18,7 +18,6 @@ jobs:
       run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
     
     - name: Import Code Signing Certificate
-      if: ${{ secrets.CERTIFICATE_P12 != '' }}
       env:
         CERTIFICATE_P12: ${{ secrets.CERTIFICATE_P12 }}
         CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
@@ -57,7 +56,6 @@ jobs:
         echo "Found app at: $APP_PATH"
     
     - name: Notarize app
-      if: ${{ secrets.NOTARIZATION_APPLE_ID != '' && secrets.NOTARIZATION_PASSWORD != '' && secrets.NOTARIZATION_TEAM_ID != '' }}
       env:
         APPLE_ID: ${{ secrets.NOTARIZATION_APPLE_ID }}
         APPLE_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
