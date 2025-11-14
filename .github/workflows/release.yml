@@ -59,7 +59,7 @@ jobs:
       env:
         APPLE_ID: ${{ secrets.NOTARIZATION_APPLE_ID }}
         APPLE_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
-        TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+        TEAM_ID: ${{ secrets.DEVELOPMENT_TEAM }}
       run: |
         APP_PATH="${{ steps.find_app.outputs.app_path }}"
         ditto -c -k --keepParent "$APP_PATH" "UniFiAPMonitor.zip"
