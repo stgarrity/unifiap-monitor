@@ -17,6 +17,7 @@ A1C54D96D8A4A54874B9E80 /* UniFiAPIClient.swift in Sources */ = {isa = PBXBuildF
 A1D61800592F314D63A7C47 /* AccessPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */; };
 		A1708D7EED25454007844D6 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CF4E61757D524FBD8F82E /* AppState.swift */; };
 		A164FD6D2BDFA7488799738 /* APCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16FD4A94335FD4589AC380 /* APCacheManager.swift */; };
+				A1ASSETS0000000000000002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1ASSETS0000000000000001 /* Assets.xcassets */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@ A1C1680128AB204DEFBD587 /* UniFiAPIClient.swift */ = {isa = PBXFileReference; la
 A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessPoint.swift; sourceTree = "<group>"; };
 		A1CF4E61757D524FBD8F82E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		A16FD4A94335FD4589AC380 /* APCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APCacheManager.swift; sourceTree = "<group>"; };
+				A1ASSETS0000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@ A1A55D6DC823204AC9B2EC7 /* AccessPoint.swift */ = {isa = PBXFileReference; lastK
 				A1000009000000000000001 /* Models */,
 				A100000A000000000000001 /* Services */,
 				A1000005000000000000001 /* Info.plist */,
+				A1ASSETS0000000000000001 /* Assets.xcassets */,
 				A1000006000000000000001 /* UniFiAPMonitor.entitlements */,
 			);
 			path = UniFiAPMonitor;
@@ -172,7 +175,8 @@ A16FD4A94335FD4589AC380 /* APCacheManager.swift */,
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
+							A1ASSETS0000000000000002 /* Assets.xcassets in Resources */,
+);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
