@@ -142,22 +142,41 @@ class UniFiAPIClient: NSObject {
     func findAccessPoint(byBSSID bssid: String, accessPoints: [AccessPoint]) -> AccessPoint? {
         let normalizedBSSID = bssid.replacingOccurrences(of: ":", with: "").lowercased()
         
-        // First try exact match
+        // First try exact match (fastest path)
         if let exactMatch = accessPoints.first(where: { $0.normalizedMAC == normalizedBSSID }) {
             return exactMatch
         }
         
-        // UniFi APs broadcast multiple BSSIDs (one per SSID), where only the last octet differs
-        // Try matching on first 5 octets (first 10 hex characters)
-        if normalizedBSSID.count >= 10 {
-            let bssidPrefix = String(normalizedBSSID.prefix(10))
-            return accessPoints.first { ap in
-                let apPrefix = String(ap.normalizedMAC.prefix(10))
-                return apPrefix == bssidPrefix
+        // UniFi APs broadcast multiple BSSIDs (one per SSID), where any octet can differ
+        // Use fuzzy matching to find the best match allowing up to 2 octets to differ
+        guard normalizedBSSID.count == 12 else {
+            return nil
+        }
+        
+        var bestMatch: AccessPoint?
+        var bestMatchingOctets = 0
+        
+        for ap in accessPoints {
+            guard ap.normalizedMAC.count == 12 else { continue }
+            
+            var matchingOctets = 0
+            for i in stride(from: 0, to: 12, by: 2) {
+                let bssidOctet = normalizedBSSID[normalizedBSSID.index(normalizedBSSID.startIndex, offsetBy: i)..<normalizedBSSID.index(normalizedBSSID.startIndex, offsetBy: i+2)]
+                let apOctet = ap.normalizedMAC[ap.normalizedMAC.index(ap.normalizedMAC.startIndex, offsetBy: i)..<ap.normalizedMAC.index(ap.normalizedMAC.startIndex, offsetBy: i+2)]
+                
+                if bssidOctet == apOctet {
+                    matchingOctets += 1
+                }
+            }
+            
+            // Consider it a match if at least 4 out of 6 octets match (allowing 2 to differ)
+            if matchingOctets >= 4 && matchingOctets > bestMatchingOctets {
+                bestMatch = ap
+                bestMatchingOctets = matchingOctets
             }
         }
         
-        return nil
+        return bestMatch
     }
     
     // MARK: - Private Methods
